@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UrunSatisEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="tblMusteriler">
+    <Key>
+      <PropertyRef Name="musteriID" />
+    </Key>
+    <Property Name="musteriID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Adres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Telefon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="durum" Type="Boolean" />
+    <NavigationProperty Name="tblSatislar" Relationship="Self.FK_tblSatislar_tblMusteriler" FromRole="tblMusteriler" ToRole="tblSatislar" />
+  </EntityType>
+  <EntityType Name="tblSatislar">
+    <Key>
+      <PropertyRef Name="satisID" />
+    </Key>
+    <Property Name="satisID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="urun" Type="Int32" />
+    <Property Name="musteri" Type="Int32" />
+    <Property Name="adet" Type="Int32" />
+    <Property Name="toplamFiyat" Type="Int32" />
+    <Property Name="tarih" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="tblMusteriler" Relationship="Self.FK_tblSatislar_tblMusteriler" FromRole="tblSatislar" ToRole="tblMusteriler" />
+    <NavigationProperty Name="tblUrunler" Relationship="Self.FK_tblSatislar_tblUrunler" FromRole="tblSatislar" ToRole="tblUrunler" />
+  </EntityType>
+  <EntityType Name="tblUrunler">
+    <Key>
+      <PropertyRef Name="urunID" />
+    </Key>
+    <Property Name="urunID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="urunAd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Stok" Type="Int32" />
+    <Property Name="alisFiyat" Type="Int32" />
+    <Property Name="satisFiyat" Type="Int32" />
+    <Property Name="durum" Type="Boolean" />
+    <NavigationProperty Name="tblSatislar" Relationship="Self.FK_tblSatislar_tblUrunler" FromRole="tblUrunler" ToRole="tblSatislar" />
+  </EntityType>
+  <EntityType Name="Kayıt">
+    <Key>
+      <PropertyRef Name="KullaniciAdi" />
+    </Key>
+    <Property Name="KullaniciAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Şifre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Telefon" Type="Decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <Association Name="FK_tblSatislar_tblMusteriler">
+    <End Role="tblMusteriler" Type="Self.tblMusteriler" Multiplicity="0..1" />
+    <End Role="tblSatislar" Type="Self.tblSatislar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblMusteriler">
+        <PropertyRef Name="musteriID" />
+      </Principal>
+      <Dependent Role="tblSatislar">
+        <PropertyRef Name="musteri" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblSatislar_tblUrunler">
+    <End Role="tblUrunler" Type="Self.tblUrunler" Multiplicity="0..1" />
+    <End Role="tblSatislar" Type="Self.tblSatislar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUrunler">
+        <PropertyRef Name="urunID" />
+      </Principal>
+      <Dependent Role="tblSatislar">
+        <PropertyRef Name="urun" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="UrunSatisEEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="tblMusteriler" EntityType="Self.tblMusteriler" />
+    <EntitySet Name="tblSatislar" EntityType="Self.tblSatislar" />
+    <EntitySet Name="tblUrunler" EntityType="Self.tblUrunler" />
+    <EntitySet Name="Kayıt" EntityType="Self.Kayıt" />
+    <AssociationSet Name="FK_tblSatislar_tblMusteriler" Association="Self.FK_tblSatislar_tblMusteriler">
+      <End Role="tblMusteriler" EntitySet="tblMusteriler" />
+      <End Role="tblSatislar" EntitySet="tblSatislar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblSatislar_tblUrunler" Association="Self.FK_tblSatislar_tblUrunler">
+      <End Role="tblUrunler" EntitySet="tblUrunler" />
+      <End Role="tblSatislar" EntitySet="tblSatislar" />
+    </AssociationSet>
+    <FunctionImport Name="SatisListesi" ReturnType="Collection(UrunSatisEModel.SatisListesi_Result)" />
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(UrunSatisEModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(UrunSatisEModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+    <FunctionImport Name="satislarinListesi" ReturnType="Collection(UrunSatisEModel.satislarinListesi_Result)" />
+  </EntityContainer>
+  <ComplexType Name="SatisListesi_Result">
+    <Property Type="Int32" Name="Satış_No" Nullable="false" />
+    <Property Type="String" Name="Ürün_Adı" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Ad_Soyad" Nullable="true" MaxLength="101" />
+    <Property Type="Int32" Name="Adet" Nullable="true" />
+    <Property Type="DateTime" Name="tarih" Nullable="true" Precision="16" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="satislarinListesi_Result">
+    <Property Type="Int32" Name="Satış_No" Nullable="false" />
+    <Property Type="Int32" Name="Ürün_Ad" Nullable="true" />
+    <Property Type="String" Name="Ad_Soyad" Nullable="true" MaxLength="101" />
+    <Property Type="Int32" Name="Adet" Nullable="true" />
+    <Property Type="DateTime" Name="tarih" Nullable="true" Precision="16" />
+  </ComplexType>
+</Schema>
